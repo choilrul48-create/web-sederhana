@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout - Toko Buku Komplit</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <header>
+      <strong>📚 Halaman Pemesanan (Checkout)</strong>
+    </header>
+
+    <main>
+      <a class="toko toko-light" href="dashboard.html">← Dashboard</a>
+      <a class="toko toko-light" href="stok.html">+ Tambah Buku</a>
+
+      <div class="card">
+        <h2>Data Pesanan</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Judul</th>
+              <th>Harga</th>
+              <th>Jumlah</th>
+              <th>Subtotal</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+
+          <tbody id="isiPesanan"></tbody>
+        </table>
+
+        <h3>Total: <span id="total">Rp 0</span></h3>
+      </div>
+
+      <div class="card">
+        <h2>Informasi Pemesan & Pembayaran</h2>
+
+        <form id="formCheckout">
+          <label>Nama Pemesan</label>
+          <input type="text" id="nama" required />
+
+          <label>Alamat</label>
+          <textarea id="alamat" rows="2" required></textarea>
+
+          <label>No. Telepon</label>
+          <input type="tel" id="telp" required />
+
+          <label>Metode Pembayaran</label>
+          <select id="metode" required>
+            <option value="">-- Pilih --</option>
+            <option value="Transfer Bank">Transfer Bank</option>
+            <option value="E-Wallet">E-Wallet</option>
+            <option value="COD">COD (Bayar di Tempat)</option>
+          </select>
+
+          <br />
+          <button type="submit">Buat Pesanan</button>
+        </form>
+      </div>
+    </main>
+
+    <script>
+      // Mengambil data keranjang dari localStorage
+      let keranjang = JSON.parse(localStorage.getItem("keranjang") || "[]");
+
+      // Mengubah harga menjadi angka
+      function angkaHarga(harga) {
+        if (typeof harga === "number") {
+          return harga;
+        }
+
+        return Number(String(harga).replace(/\D/g, ""));
+      }
+
+      // Format rupiah
+      function formatRupiah(angka) {
+        return "Rp " + angka.toLocaleString("id-ID");
+      }
+
+      // Menampilkan pesanan
+      function tampilPesanan() {
+        const isiPesanan = document.getElementById("isiPesanan");
+        const totalElement = document.getElementById("total");
+
+        isiPesanan.innerHTML = "";
+
+        let total = 0;
+
+        if (keranjang.length === 0) {
+          isiPesanan.innerHTML = `
+            <tr>
+              <td colspan="5">Keranjang masih kosong.</td>
+            </tr>
+          `;
+        }
+
+        keranjang.forEach(function (buku, index) {
+          const harga = angkaHarga(buku.harga);
+          const subtotal = harga * buku.qty;
+
+          total += subtotal;
+
+          const baris = document.createElement("tr");
+
+          const judul = document.createElement("td");
+          judul.textContent = buku.judul;
+
+          const hargaCell = document.createElement("td");
+          hargaCell.textContent = formatRupiah(harga);
+
+          const jumlah = document.createElement("td");
+          jumlah.textContent = buku.qty;
+
+          const subtotalCell = document.createElement("td");
+          subtotalCell.textContent = formatRupiah(subtotal);
+
+          const aksi = document.createElement("td");
+          const tombolHapus = document.createElement("button");
+
+          tombolHapus.textContent = "Hapus";
+          tombolHapus.type = "button";
+
+          tombolHapus.addEventListener("click", function () {
+            hapusPesanan(index);
+          });
+
+          aksi.appendChild(tombolHapus);
+
+          baris.append(judul, hargaCell, jumlah, subtotalCell, aksi);
+
+          isiPesanan.appendChild(baris);
+        });
+
+        totalElement.textContent = formatRupiah(total);
+      }
+
+      // Menghapus buku dari keranjang
+      function hapusPesanan(index) {
+        keranjang.splice(index, 1);
+
+        localStorage.setItem("keranjang", JSON.stringify(keranjang));
+
+        tampilPesanan();
+      }
+
+      // Proses checkout
+      document
+        .getElementById("formCheckout")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          if (keranjang.length === 0) {
+            alert("Keranjang masih kosong!");
+            return;
+          }
+
+          const nama = document.getElementById("nama").value.trim();
+          const alamat = document.getElementById("alamat").value.trim();
+          const telp = document.getElementById("telp").value.trim();
+          const metode = document.getElementById("metode").value;
+
+          const total = keranjang.reduce(function (jumlah, buku) {
+            return jumlah + angkaHarga(buku.harga) * buku.qty;
+          }, 0);
+
+          const pesananBaru = {
+            nama: nama,
+            alamat: alamat,
+            telp: telp,
+            metode: metode,
+            daftarBuku: keranjang,
+            total: total,
+            tanggal: new Date().toLocaleString("id-ID"),
+          };
+
+          // Menyimpan riwayat pesanan
+          const riwayat = JSON.parse(
+            localStorage.getItem("riwayatPesanan") || "[]",
+          );
+
+          riwayat.push(pesananBaru);
+
+          localStorage.setItem("riwayatPesanan", JSON.stringify(riwayat));
+
+          // Mengosongkan keranjang
+          localStorage.removeItem("keranjang");
+
+          alert(
+            "Pesanan berhasil dibuat!\nTotal pembayaran: " +
+              formatRupiah(total),
+          );
+
+          this.reset();
+
+          keranjang = [];
+          tampilPesanan();
+        });
+
+      // Menampilkan data saat halaman dibuka
+      tampilPesanan();
+    </script>
+  </body>
+</html>

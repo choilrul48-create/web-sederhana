@@ -1,0 +1,146 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background-image: linear-gradient(
+    rgba(255, 255, 255, 0.6),
+    rgba(255, 255, 255, 0.6)
+  ), url("ima.jpg");
+  background-size: cover;
+  color: #222;
+  
+header {
+  background: #77808e;
+  color: #fff;
+  padding: 14px 24px;
+}
+main {
+  max-width: 900px;
+  margin: 24px auto;
+  padding: 0 16px;
+}
+.card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+h1,
+h2 {
+  margin-top: 0;
+}
+label {
+  display: block;
+  margin: 10px 0 4px;
+  font-weight: bold;
+}
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 9px;
+  border: 1px solid #bbb;
+  border-radius: 6px;
+  font-size: 14px;
+}
+button,
+.toko {
+  display: inline-block;
+  background: #2b4c7e;
+  color: #fff;
+  border: 0;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  text-decoration: none;
+  margin: 4px 4px 4px 0;
+}
+button:hover,
+.toko:hover {
+  background: #1d3558;
+}
+.toko-light {
+  background: #e3e8f0;
+  color: #2b4c7e;
+}
+.toko-danger {
+  background: #c0392b;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+}
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+th {
+  background: #eef1f6;
+}
+.menu {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+.menu .toko {
+  text-align: center;
+  padding: 18px;
+  font-size: 15px;
+  margin: 0;
+}
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+.modal.show {
+  display: flex;
+}
+.modal-box {
+  background: #fff;
+  padding: 24px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 380px;
+}
+.progress {
+  background: #e3e8f0;
+  border-radius: 20px;
+  height: 22px;
+  overflow: hidden;
+  margin: 8px 0;
+}
+.progress-bar {
+  height: 100%;
+  background: #27ae60;
+  color: #fff;
+  font-size: 12px;
+  text-align: center;
+  line-height: 22px;
+  transition: width 0.6s;
+}
+.steps {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #666;
+}
+.steps .done {
+  color: #27ae60;
+  font-weight: bold;
+}
+.login-wrap {
+  max-width: 400px;
+  margin: 60px auto;
+}

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tracking Pengiriman - Toko Buku Komplit</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="data.js"></script>
+  </head>
+  <body>
+    <header><strong>📚 Informasi Pengiriman (Tracking)</strong></header>
+    <main>
+      <a class="toko toko-light" href="dashboard.html">← Dashboard</a>
+
+      <div class="card">
+        <h2>Cari Nomor Delivery Order</h2>
+        <label for="noDO">Nomor Delivery Order</label>
+        <input id="noDO" placeholder="Contoh: DO-2026001" />
+        <button onclick="cari()">Cari</button>
+      </div>
+
+      <div class="card" id="hasil" style="display: none">
+        <h2>Hasil Pelacakan</h2>
+        <table>
+          <tr>
+            <th>Nama Pemesan</th>
+            <td id="rNama"></td>
+          </tr>
+          <tr>
+            <th>Ekspedisi</th>
+            <td id="rEkspedisi"></td>
+          </tr>
+          <tr>
+            <th>Tanggal Kirim</th>
+            <td id="rTanggal"></td>
+          </tr>
+          <tr>
+            <th>Jenis Paket</th>
+            <td id="rPaket"></td>
+          </tr>
+          <tr>
+            <th>Total Pembayaran</th>
+            <td id="rTotal"></td>
+          </tr>
+        </table>
+        <h3>Status Pengiriman: <span id="rStatus"></span></h3>
+        <div class="progress"><div class="progress-bar" id="bar"></div></div>
+        <div class="steps" id="steps"></div>
+      </div>
+    </main>
+  </body>
+</html>

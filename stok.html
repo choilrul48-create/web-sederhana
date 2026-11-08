@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Informasi Stok - Toko Buku Komplit</title>
+
+    <link rel="stylesheet" href="style.css" />
+    <script src="data.js"></script>
+  </head>
+
+  <body>
+    <header>
+      <strong>📚 Informasi Stok / Katalog Buku</strong>
+    </header>
+
+    <main>
+      <a class="toko toko-light" href="dashboard.html">← Dashboard</a>
+      <a class="toko" href="checkout.html">Ke Checkout 🛒</a>
+
+      <!-- DAFTAR BUKU -->
+      <div class="card">
+        <h2>Daftar Buku</h2>
+
+        <table id="tabelBuku">
+          <thead>
+            <tr>
+              <th>Kode</th>
+              <th>Judul</th>
+              <th>Jenis Buku</th>
+              <th>Harga</th>
+              <th>Stok</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <!-- TAMBAH STOK -->
+      <div class="card">
+        <h2>Tambah Stok Baru</h2>
+
+        <form id="formTambah">
+          <label>Kode</label>
+          <input id="kode" required />
+
+          <label>Judul</label>
+          <input id="judul" required />
+
+          <label>Jenis Buku</label>
+          <input id="penulis" required />
+
+          <label>Harga</label>
+          <input id="harga" type="number" min="0" required />
+
+          <label>Stok</label>
+          <input id="stok" type="number" min="0" required />
+
+          <br />
+          <button type="submit">Tambahkan</button>
+        </form>
+      </div>
+    </main>
+
+    <script>
+      // 1. Mengambil tabel
+      const tabel = document.querySelector("#tabelBuku tbody");
+
+      // 2. Fungsi menampilkan buku
+      function tambahBaris(buku) {
+        const baris = document.createElement("tr");
+
+        baris.innerHTML = `
+          <td>${buku.kodeBarang}</td>
+          <td>${buku.namaBarang}</td>
+          <td>${buku.jenisBarang}</td>
+          <td>Rp ${Number(buku.harga).toLocaleString("id-ID")}</td>
+          <td>${buku.stok}</td>
+          <td>
+            <button type="button" onclick="pesanBuku('${buku.kodeBarang}')">
+              Pesan
+            </button>
+          </td>
+        `;
+
+        tabel.appendChild(baris);
+      }
+
+      // 3. Menampilkan seluruh katalog buku
+      dataKatalogBuku.forEach(tambahBaris);
+
+      // 4. Fungsi memasukkan buku ke keranjang
+      function pesanBuku(kode) {
+        const buku = dataKatalogBuku.find((b) => b.kodeBarang === kode);
+
+        if (!buku) return;
+
+        const keranjang = JSON.parse(localStorage.getItem("keranjang") || "[]");
+
+        const ada = keranjang.find((k) => k.kode === buku.kodeBarang);
+
+        if (ada) {
+          ada.qty++;
+        } else {
+          keranjang.push({
+            kode: buku.kodeBarang,
+            judul: buku.namaBarang,
+            harga: buku.harga,
+            qty: 1,
+          });
+        }
+
+        localStorage.setItem("keranjang", JSON.stringify(keranjang));
+
+        alert(buku.namaBarang + " berhasil ditambahkan ke keranjang!");
+      }
+
+      // 5. Fungsi menambahkan buku baru
+      document
+        .getElementById("formTambah")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const bukuBaru = {
+            kodeBarang: document.getElementById("kode").value.trim(),
+            namaBarang: document.getElementById("judul").value.trim(),
+            jenisBarang: document.getElementById("penulis").value.trim(),
+            harga: Number(document.getElementById("harga").value),
+            stok: Number(document.getElementById("stok").value),
+          };
+
+          if (
+            !bukuBaru.kodeBarang ||
+            !bukuBaru.namaBarang ||
+            !bukuBaru.jenisBarang
+          ) {
+            alert("Semua kolom wajib diisi!");
+            return;
+          }
+
+          // Memeriksa kode buku agar tidak duplikat
+          const sudahAda = dataKatalogBuku.some(
+            (b) => b.kodeBarang === bukuBaru.kodeBarang,
+          );
+
+          if (sudahAda) {
+            alert("Kode buku sudah digunakan!");
+            return;
+          }
+
+          // Menambahkan data
+          dataKatalogBuku.push(bukuBaru);
+
+          // Menampilkan buku baru
+          tambahBaris(bukuBaru);
+
+          // Mengosongkan formulir
+          this.reset();
+
+          alert("Buku berhasil ditambahkan!");
+        });
+    </script>
+  </body>
+</html>
